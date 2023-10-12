@@ -35,25 +35,49 @@
 import express from 'express' 
 
 
+// connection
+// import {db} from './config/connect.js'
+
 
 // routes import 
 import userRoutes from './routes/users.js'
+import postRoutes from "./routes/posts.js"
+import authRoutes from "./routes/auth.js"
+import likeRoutes from "./routes/likes.js"
+import commentRoutes from "./routes/comments.js"
+
 
 const app = express();
 
+
+
+// middleware 
+
+// to read the req and body queries - if you don't do that you wont be able to send any json object
+app.use(express.json());
+
+
+
 // this will act as our initial line for the routes
 // app.use('/api/v1');
-
 
 // for now - this will act as our test route - without separating api/v1 , or having a / route
 // this will work as it will take the /api/users as initial route , then it will go to the userRoutes , 
 // in that it will take the /test , or any other route we defined , then we use the browser to go to that url
 // and we get the data for the url we have access to and can work with 
-app.use("/api/users" , userRoutes)
+app.use("/api/auth" , authRoutes);
+app.use("/api/users" , userRoutes);
+app.use("/api/posts" , postRoutes);
+app.use("/api/comments" , commentRoutes);
+app.use("/api/likes" , likeRoutes);
 
 
 // we won't be writing all this operations here its - it wont be a good idea , so we will define the initial point for the routes to hit
 // like users , else and then their sub routes in file , nesting url hit points in each other
+
+
+// db();
+
 
 app.listen(8800 , ()=>{
     console.log("API working!")

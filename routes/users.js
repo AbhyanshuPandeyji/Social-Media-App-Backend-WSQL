@@ -1,12 +1,14 @@
 import express from 'express';
 
+
+// controller import 
+import { getUser } from '../controllers/userController.js'
+
 const router = express.Router();
 
 
 // we wont be writing our functions here , for that we use controller file 
-router.get("/test" , (req,res)=>{
-    res.send("api request in user routes works !");
-})
+router.get("/find/:userId" , getUser )
 
 
 // to export the router from here which hold all the routes in it , to default , 
