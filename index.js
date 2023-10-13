@@ -33,7 +33,8 @@
 
 // remember its not a destructure but express is whole library - don't use { express } to import
 import express from 'express' 
-
+import cookieParser from 'cookie-parser'
+import cors from "cors"
 
 // connection
 // import {db} from './config/connect.js'
@@ -47,15 +48,28 @@ import likeRoutes from "./routes/likes.js"
 import commentRoutes from "./routes/comments.js"
 
 
+
+
 const app = express();
 
 
 
 // middleware 
 
+app.use((req,res,next)=>{
+    res.header("Access-Control-Allow-Credentials" , true)
+    next()
+})
+
 // to read the req and body queries - if you don't do that you wont be able to send any json object
 app.use(express.json());
+// later we will give it our used url - either hosted one or local one - which will be frontend one -3000
+// so in index cors we give the frontend hosting url
+app.use(cors({
+    origin: "http://localhost:3000"
+}));
 
+app.use(cookieParser())
 
 
 // this will act as our initial line for the routes
