@@ -2,13 +2,14 @@ import express from 'express';
 
 
 // controller import 
-import {  } from '../controllers/postController.js'
+import { getPosts , addPost } from '../controllers/postController.js'
 
 const router = express.Router();
 
 
 
-router.get("" ,  )  
+router.get("/" , getPosts );
+router.post("/" , addPost );
 
 
 
