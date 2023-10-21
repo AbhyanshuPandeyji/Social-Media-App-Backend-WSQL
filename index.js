@@ -41,7 +41,8 @@ import commentRoutes from "./routes/comments.js"
 
 // using mutler for image upload
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'});
+// the upload destination doesn't work properly - so we will use multer disk storage
+// const upload = multer({dest: 'uploads/'});
 
 
 const app = express();
@@ -64,6 +65,24 @@ app.use(cookieParser())
 
 // this will act as our initial line for the routes
 // app.use('/api/v1');
+
+// the multer disk storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../client/public/upload')
+    },
+    filename: function (req, file, cb) {
+        cd(null, Date.now() + file.originalname);
+    }
+})
+
+const upload = multer({storage: storage});
+
+app.post('/api/upload', upload.single("file"), (req, res) => {
+    const file = req.file;
+    res.status(200).json(file.filename)
+})
+
 
 // for now - this will act as our test route - without separating api/v1 , or having a / route
 // this will work as it will take the /api/users as initial route , then it will go to the userRoutes ,
