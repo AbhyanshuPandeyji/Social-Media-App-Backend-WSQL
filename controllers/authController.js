@@ -1,9 +1,10 @@
 // he had already imported the database connection 
-import db from '../config/connect.js'
+import db from '../config/connect.js';
+// import { db } from "../connect.js";
 
 // and the bcrypt too 
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 
 // watch the video a little further and with focus 
@@ -20,11 +21,11 @@ export const register = (req ,res) =>{
     const  q = "SELECT * FROM users WHERE username = ?"
 
     db.query(q , [req.body.username] , (error , data)=>{
-            if(error) res.status(500).json(error)
+            if(error) res.status(500).json(error);
             // this response will be inside the data - thats why 
             // when we hit  it shows the message in frontend - to call it we use -err.response.data
             if(data.length) return res.status(409).json("User already exists!");
-            
+            // console.log(data)
             
             // create new user
                 // hash the password
@@ -35,7 +36,7 @@ export const register = (req ,res) =>{
 
                 // this work as a template for the query to fill up , 
                 // and the value as question mark to take up data when running the query function 
-                const  q = "INSERT INTO users (`username` , `email` , `password` , `name` ) VAlUE(?) ";
+                const  q = "INSERT INTO users (`username` , `email` , `password` , `name` ) VALUE (?)";
 
                 // passing values as an array
                 const values = [ req.body.username , req.body.email , hashedPassword , req.body.name];
@@ -56,6 +57,8 @@ export const register = (req ,res) =>{
 
 }
 
+
+// login 
 export const login = (req ,res) =>{
 
     const q = "SELECT * FROM users WHERE username = ?";
