@@ -27,6 +27,13 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from "cors"
 
+// multer is the way to upload your files without cloud storage and upload to just there folders 
+import multer from "multer";
+// using this upload we are gonna create an endpoint and upload our files
+// problem - its not adding the type of extension in the image url of the upload
+// to prevent this we are going to use multer dist storage
+// const upload = multer({ dest: 'uploads/' })
+
 // connection
 // import {db} from './config/connect.js'
 
@@ -36,11 +43,12 @@ import userRoutes from './routes/users.js'
 import postRoutes from "./routes/posts.js"
 import authRoutes from "./routes/auth.js"
 import likeRoutes from "./routes/likes.js"
-import commentRoutes from "./routes/comments.js"
+import commentRoutes from "./routes/comments.js";
 
 
 // using mutler for image upload
-const multer = require('multer');
+// const multer = require('multer');
+// import multer from "multer";
 // the upload destination doesn't work properly - so we will use multer disk storage
 // const upload = multer({dest: 'uploads/'});
 
@@ -50,10 +58,12 @@ const app = express();
 
 // middleware
 
+// help us to send cookies and to allow the others urls for the access control to send in the data
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Credentials", true)
-    next()
-})
+    // this is to allow the access control of the cors credential to be true by header
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
 
 // to read the req and body queries - if you don't do that you wont be able to send any json object
 app.use(express.json());
@@ -61,27 +71,70 @@ app.use(express.json());
 // so in index cors we give the frontend hosting url
 app.use(cors({origin: "http://localhost:3000"}));
 
-app.use(cookieParser())
+app.use(cookieParser());
 
 // this will act as our initial line for the routes
 // app.use('/api/v1');
 
 // the multer disk storage
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, '../client/public/upload')
+//     },
+//     filename: function (req, file, cb) {
+//         cd(null, Date.now() + file.originalname);
+//     }
+// })
+
+// const upload = multer({storage: storage});
+
+// to prevent the multer storage not including the file type in the end we will use this multer storage
+// ok two things , first i didn't have the correct path to which the file is going to be stored in the local storage directory
+// and also didn't create the folder in which the images will be stored]
+// so its basically an image uploader in the local storage without any inclusion of the internet data base collection
+// but to show the data , its need to be uploaded to the database image part , which contains the url so be careful
 const storage = multer.diskStorage({
+    // specific destination to upload the files 
     destination: function (req, file, cb) {
-        cb(null, '../client/public/upload')
+        // remember this destination is always going to take place from the starting point of where your folder is located in the storage
+        // because its stores the images locally and not with the cloud storage
+      cb(null, '../client/public/upload')
     },
+    // and also to change our file name and create unique name of the file
     filename: function (req, file, cb) {
-        cd(null, Date.now() + file.originalname);
+        // very complex file name 
+        //   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    //   cb(null, file.fieldname + '-' + uniqueSuffix)
+
+    // lets use our easy file name - currentDate + filename to not get conflict with the same image name file
+    cb(null, Date.now() + file.originalname );
     }
-})
+  })
+  
+  // after the file have been saved with the name in the disk we will post this 
+//   data in the backend of the functionality where the images are being used , the images are 
+//  remember these functionality are being used in all the folder its just the endpoint to upload the images not to use it
+// we will send the uploaded images where its required depending upon where we use to upload the images
+  const upload = multer({ storage: storage });
 
-const upload = multer({storage: storage});
 
-app.post('/api/upload', upload.single("file"), (req, res) => {
+  // just random endpoint 
+// app.post('/api/upload', upload.single("file"), (req, res) => {
+//     const file = req.file;
+//     res.status(200).json(file.filename)
+// })
+
+
+
+//---------- our image upload endpoint , you can define and create a route for the image upload in a separate file
+app.post("/api/upload" , upload.single("file") , (req,res)=>{
+
     const file = req.file;
-    res.status(200).json(file.filename)
-})
+    // send back the file name to be uploaded , to can be used in the app with selection name
+    res.status(200).json(file.filename);
+} )
+
+
 
 
 // for now - this will act as our test route - without separating api/v1 , or having a / route
