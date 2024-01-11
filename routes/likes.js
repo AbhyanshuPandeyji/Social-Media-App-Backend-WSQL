@@ -2,13 +2,13 @@ import express from 'express';
 
 
 // controller import 
-import {  } from '../controllers/likeController.js'
+import { getLikes } from '../controllers/likeController.js'
 
 const router = express.Router();
 
 
 
-router.get("" ,  )
+router.get("/" , getLikes )
 
 
 
