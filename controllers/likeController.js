@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken'
 
 
 // To get likes on a post
-export const getLikes = (req,res)=>{
+export const getLikes = async (req,res)=>{
         
 
-        const q = 'SELECT userId FROM likes WHERE postId = ?';
+        const q = `SELECT userId FROM likes WHERE postId = ?`;
 
 
 
