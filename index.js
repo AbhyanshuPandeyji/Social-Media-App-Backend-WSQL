@@ -44,6 +44,7 @@ import postRoutes from "./routes/posts.js"
 import authRoutes from "./routes/auth.js"
 import likeRoutes from "./routes/likes.js"
 import commentRoutes from "./routes/comments.js";
+import relationshipRoutes from "./routes/relationships.js";
 
 
 // using mutler for image upload
@@ -146,6 +147,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/likes", likeRoutes);
+app.use("/api/relationships", relationshipRoutes);
 
 
 // we won't be writing all this operations here its - it wont be a good idea , so we will define the initial point for the routes to hit
