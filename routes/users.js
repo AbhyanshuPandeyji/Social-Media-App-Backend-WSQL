@@ -2,13 +2,14 @@ import express from 'express';
 
 
 // controller import 
-import { getUser } from '../controllers/userController.js'
+import { getUser , updateUser} from '../controllers/userController.js'
 
 const router = express.Router();
 
 
 // we wont be writing our functions here , for that we use controller file 
-router.get("/find/:userId" , getUser )
+router.get("/find/:userId" , getUser );
+router.put("/" , updateUser );
 
 
 // to export the router from here which hold all the routes in it , to default , 
